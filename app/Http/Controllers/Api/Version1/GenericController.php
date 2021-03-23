@@ -48,4 +48,21 @@ class GenericController extends Controller
             throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request)
+    {
+        $request = $request->all();
+
+        try {
+            $generics = $this->genericModel->findById($request['id']);
+            $generics->delete();
+            return response()->json($generics->toArray());
+        } catch (BadRequestException $e) {
+            throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
+        }
+    }
 }

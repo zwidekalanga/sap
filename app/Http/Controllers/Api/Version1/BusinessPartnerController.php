@@ -48,4 +48,21 @@ class BusinessPartnerController extends Controller
             throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
         }
     }
+
+    /**
+     * @param BusinessPartnerRequest $businessPartnerRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(BusinessPartnerRequest $businessPartnerRequest)
+    {
+        $businessPartnerRequest = $businessPartnerRequest->all();
+
+        try {
+            $businessPartner = $this->businessPartnerModel->findById($businessPartnerRequest['id']);
+            $businessPartner->delete();
+            return response()->json($businessPartner->toArray());
+        } catch (BadRequestException $e) {
+            throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
+        }
+    }
 }

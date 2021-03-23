@@ -121,7 +121,7 @@ class Builder extends Runner
             $this->request->setQueryParams($query);
         }
 
-        $this->process();
+        $this->process('RemoveObject');
     }
 
     public function cancel(array $query) {

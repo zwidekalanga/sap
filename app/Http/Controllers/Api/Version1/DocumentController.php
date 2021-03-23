@@ -47,4 +47,21 @@ class DocumentController extends Controller
             throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request)
+    {
+        $request = $request->all();
+
+        try {
+            $document = $this->documentModel->findById($request['id']);
+            $document->delete();
+            return response()->json($document->toArray());
+        } catch (BadRequestException $e) {
+            throw new HttpResponseException(response()->json($e->toArray(), $e->getCode()));
+        }
+    }
 }

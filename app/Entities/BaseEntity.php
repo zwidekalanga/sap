@@ -177,6 +177,13 @@ class BaseEntity
     }
 
     /**
+     * @return Builder
+     */
+    public function getConnecion() {
+        return Container::getInstance()->make(Builder::class);
+    }
+
+    /**
      * @param $data
      * @return BaseEntity
      * @throws BadRequestException
@@ -210,6 +217,16 @@ class BaseEntity
         }
     }
 
+    public function delete() {
+        try {
+            $this->preDeleteHook();
+            $this->destroy();
+            return $this;
+        } catch (BadRequestException $e) {
+            throw $e;
+        }
+    }
+
     /**
      * @return $this
      * @throws BadRequestException
@@ -230,6 +247,22 @@ class BaseEntity
     }
 
     /**
+     * @return $this
+     * @throws BadRequestException
+     */
+    public function destroy()
+    {
+        $data = $this->validate();
+        $connecion = Container::getInstance()->make(Builder::class);
+
+        if ($this->id) {
+            $connecion->table($this->getTable())->delete([$this->primaryKey => $this->id]);
+        } 
+
+        return $this;
+    }
+
+    /**
      * @return array
      * @throws BadRequestException
      */
@@ -241,4 +274,6 @@ class BaseEntity
     public function preCreateHook($data) {}
 
     public function preUpdateHook($data) {}
+
+    public function preDeleteHook($data) {}
 }
